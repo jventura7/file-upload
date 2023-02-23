@@ -5,6 +5,9 @@ require('express-async-errors')
 const express = require('express')
 const app = express()
 
+// file upload
+const fileUpload = require('express-fileupload')
+
 // database 
 const connectDB = require('./db/connect')
 
@@ -13,15 +16,16 @@ const notFoundMiddleware = require('./middleware/not-found')
 const errorHandlerMiddleware = require('./middleware/error-handler')
 
 // route imports
-const productRoutes = require('./routes/productRoutes')
-
-// home route
-app.get('/', (req, res) => {
-    res.send('<h1>File Upload Starter </h1>')
-})
+const productRouter = require('./routes/productRoutes')
 
 // MIDDLEWARE
+app.use(express.static('./public'))
 app.use(express.json())
+app.use(fileUpload())
+
+// routes
+app.use('/api/v1/products', productRouter)
+
 app.use(notFoundMiddleware)
 app.use(errorHandlerMiddleware)
 
